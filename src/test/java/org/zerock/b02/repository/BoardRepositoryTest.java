@@ -76,7 +76,7 @@ public class BoardRepositoryTest {
     }
 
     @Test
-    public void testPaging(){
+    public void pagingTest(){
         Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
 
         Page<Board> result = boardRepository.findAll(pageable);
@@ -91,6 +91,48 @@ public class BoardRepositoryTest {
             log.info("board: " + board);
         });
 
+    }
+
+    @Test
+    public void search1Test(){
+
+//        1부터 10까지 bno로 내림차순 정렬
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
+
+        Page<Board> boardList = boardRepository.search1(pageable);
+
+        log.info("boardList........ {}", boardList);
+
+    }
+
+    @Test
+    public void searchAllTest(){
+
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
+
+        String[] types = {"t", "c", "w"};
+
+        Page<Board> boardList = boardRepository.searchAll(types, "title", pageable);
+
+    }
+
+    @Test
+    public void searchAllTest2(){
+
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+        String[] types = {"t", "c", "w"};
+
+        Page<Board> boardList = boardRepository.searchAll(types, "title", pageable);
+
+        log.info("total page: " + boardList.getTotalPages());
+        log.info("page size: " + boardList.getSize());
+        log.info("current page: " + boardList.getNumber());
+        log.info("prev? " + boardList.hasPrevious() + " | next? " + boardList.hasNext());
+
+        boardList.getContent().forEach( board -> {
+            log.info("board: " + board);
+        });
     }
 
 
