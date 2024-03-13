@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.b02.dto.BoardDTO;
+import org.zerock.b02.dto.PageRequestDTO;
+import org.zerock.b02.dto.PageResponseDTO;
+
+import java.util.List;
 
 @SpringBootTest
 @Slf4j
@@ -51,5 +55,28 @@ public class BoardServiceTests {
                 .build();
 
         boardService.modify(boardDTO);
+    }
+
+    @Test
+    public void listTest(){
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .type("tcw")    //  제목, 내용, 작성자 모두 검색함
+                .keyword("1")   //  1을 검색함
+                .page(1)        //  1페이지
+                .size(10)       //  페이지당 10개씩
+                .build();
+
+
+//        페이지 요청 객체로 페이지 응답 객체를 받아옴
+        PageResponseDTO<BoardDTO> pageResponseDTO = boardService.list(pageRequestDTO);
+
+        log.info("[pageResponseDTO] " + pageResponseDTO);
+        log.info("board list: " + pageResponseDTO.getDtoList());
+        log.info("total page: " + pageResponseDTO.getTotal());
+        log.info("current page: " + pageResponseDTO.getPage());
+        log.info("start: " + pageResponseDTO.getStart());
+        log.info("end: " + pageResponseDTO.getEnd());
+
     }
 }

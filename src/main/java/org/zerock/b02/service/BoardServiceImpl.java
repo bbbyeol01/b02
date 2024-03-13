@@ -4,12 +4,18 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b02.domain.Board;
 import org.zerock.b02.dto.BoardDTO;
+import org.zerock.b02.dto.PageRequestDTO;
+import org.zerock.b02.dto.PageResponseDTO;
 import org.zerock.b02.repository.BoardRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -58,5 +64,30 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public void remove(Long bno) {
         boardRepository.deleteById(bno);
+    }
+
+    @Override
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        String[] types = pageRequestDTO.getType();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable();
+
+//        List<BoardDTO>로 변환되어야 함
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+//        변환 과정
+//        modelMapper를 사용하여 변환할 수 있음
+//        Page<Board>에 담긴 내용을 하나씩 까서 board -> BoardDTO로 매핑함(변환)
+//        변환된 스트림을 List로 바꿈
+        List<BoardDTO> dtoList = result.getContent().stream()
+                .map(board -> modelMapper.map(board, BoardDTO.class))
+                .collect(Collectors.toList());
+
+//        PageResponseDTO build
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build();
     }
 }
