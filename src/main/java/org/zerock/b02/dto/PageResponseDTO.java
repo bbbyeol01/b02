@@ -35,12 +35,15 @@ public class PageResponseDTO<E> {
             return;
         }
 
-//        현재 몇 페이지를 원하는지
+//        현재 몇 페이지?
         this.page = pageRequestDTO.getPage();
 
+//        페이지 당 글 개수?
         this.size = pageRequestDTO.getSize();
 
+//        게시글 담긴 list
         this.dtoList = dtoList;
+//        총 게시글 수
         this.total = total;
 
 //        화면에서 마지막 번호

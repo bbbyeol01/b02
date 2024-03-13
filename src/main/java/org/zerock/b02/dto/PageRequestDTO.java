@@ -63,6 +63,7 @@ public class PageRequestDTO {
                 }
             }
 
+//            ex) page=1&type=tcw&keyword=안녕하세요
             link = sb.toString();
         }
 
