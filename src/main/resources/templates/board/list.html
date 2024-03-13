@@ -57,7 +57,11 @@
                         <tbody>
                         <tr th:each="dto:${pageResponseDTO.dtoList}">
                             <th scope="row">[[${dto.bno}]]</th>
-                            <td>[[${dto.title}]]</td>
+                            <td>
+                                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">
+                                [[${dto.title}]]
+                                </a>
+                            </td>
                             <td>[[${dto.writer}]]</td>
                             <!-- <td>[[${dto.regDate}]]</td> -->
                             <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>

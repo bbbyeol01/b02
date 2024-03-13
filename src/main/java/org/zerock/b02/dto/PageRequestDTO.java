@@ -51,7 +51,7 @@ public class PageRequestDTO {
             sb.append("page=").append(this.page).append("&size=").append(this.size);
 
 //            type이 비어있으면
-            if(type == null && type.isEmpty()){
+            if(type != null && !type.isEmpty()){
                 sb.append("&type=").append(type);
             }
 
