@@ -16,4 +16,10 @@ public class SampleController {
 
         model.addAttribute("msg", "Hello, World!");
     }
+
+//    자동~!
+//    @GetMapping("/")
+//    public String index(){
+//        return "index";
+//    }
 }
