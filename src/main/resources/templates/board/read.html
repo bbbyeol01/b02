@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>[[${boardDTO.title}]]</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row mt-3">
+        <div class="col">
+          <div class="card">
+            <div class="card-header"><strong>[[${boardDTO.title}]]</strong></div>
+            <div class="card-header">[[${boardDTO.writer}]]</div>
+
+            <div class="card-body">
+              <br>
+              [[${boardDTO.content}]]
+              <br>
+              <br>
+            </div>
+            <div class="card-footer" th:text="${#temporals.format(boardDTO.modDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+          </div>
+        </div>
+    </div>
+
+  <div class="my-4">
+
+    <!--
+    <div class="float-end" th:with="link = ${pageRequestDTO.getLink()}">
+       <a th:href="|@{/board/list}?@{link}|" class="text-decoration-none">
+        <button type="button" class="btn btn-primary">목록</button>
+      </a>
+
+    </div>
+    -->
+  </div>
+
+
+</div> <!-- div content -->
+
+
+</body>
+</html>

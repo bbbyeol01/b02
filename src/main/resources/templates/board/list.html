@@ -89,7 +89,27 @@
     </div>
 
 
-</div>
+    <!-- 모달창 -->
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">글 작성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>작성이 완료되었습니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div> <!-- div content -->
 
 <script layout:fragment="script" th:inline="javascript">
     document.querySelector(".pagination").addEventListener("click", function (e) {
@@ -115,6 +135,14 @@
         // 클리어 버튼을 누르면 검색 조건이 없는 리스트 불러옴
         self.location = '/board/list';
     })
+
+
+    const result = [[${result}]];
+    const modal = new bootstrap.Modal(document.querySelector(".modal"));
+
+    if(result){
+        modal.show();
+    }
 </script>
 </body>
 </html>
