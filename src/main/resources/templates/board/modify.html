@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Board Modify</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">게시글 수정</div>
+        <div class="card-body">
+
+          <!-- 글 수정 form -->
+          <form th:action="@{/board/modify}" method="post" id="f1">
+
+            <input type="hidden" th:value="${boardDTO.bno}" name="bno"/>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">제목</span>
+              <input th:value="${boardDTO.title}"  type="text" name="title" class="form-control" placeholder="제목"/>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">내용</span>
+              <textarea th:text="${boardDTO.content}"  name="content" class="form-control col-sm-5"  rows="5" placeholder="내용"></textarea>
+            </div>
+
+            <div class="input-group mb-3">
+              <span class="input-group-text">작성자</span>
+              <input th:value="${boardDTO.writer}" type="text" name="writer" class="form-control" placeholder="작성자"/>
+            </div>
+
+            <div class="my-4">
+              <div class="float-end">
+                <button type="submit" class="btn btn-primary modBtn">수정</button>
+                <button type="reset" class="btn btn-secondary">초기화</button>
+              </div>
+            </div>
+
+
+          </form>
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+
+  const errors = [[${errors}]];
+  console.log(errors);
+
+  let errorMsg = '';
+
+  if(errors){
+    for(let i = 0; i < errors.length; i++){
+
+      let field = `${errors[i].field}`;
+      switch (field){
+        case "title" : field = "제목";
+          break;
+        case "content" : field = "내용";
+          break;
+        case "writer" : field = "작성자란";
+          break;
+      }
+      errorMsg += field + `은 ${errors[i].defaultMessage}.\n`;
+    }
+
+    alert(errorMsg);
+  }
+
+  const link = [[${pageRequestDTO.getLink()}]];
+  const formObj = document.querySelector("#f1");
+
+  document.querySelector(".modBtn").addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    formObj.action = `/board/modify?${link}`;
+    formObj.method = 'post';
+    formObj.submit();
+
+  }, false)
+
+
+</script>
+</body>
+</html>

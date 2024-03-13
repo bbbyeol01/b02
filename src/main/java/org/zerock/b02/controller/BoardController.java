@@ -62,7 +62,7 @@ public class BoardController {
 
     }
 
-    @GetMapping("/read")
+    @GetMapping({"/read", "/modify"})   //  read와 modify에 접속했을 때 해당 글을 model로 반환
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
         BoardDTO boardDTO = boardService.readOne(bno);
@@ -72,5 +72,32 @@ public class BoardController {
         model.addAttribute("boardDTO", boardDTO);
     }
 
+    @PostMapping("/modify")
+    public String modify(PageRequestDTO pageRequestDTO,
+                         @Valid BoardDTO boardDTO,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes){
+
+        log.info("board modify.........." + boardDTO);
+
+        if(bindingResult.hasErrors()){
+            log.info("error!");
+
+            String link = pageRequestDTO.getLink();
+
+            redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
+
+            redirectAttributes.addAttribute("bno", boardDTO.getBno());
+
+            return "redirect:/board/modify?" + link;
+        }
+
+        boardService.modify(boardDTO);
+        redirectAttributes.addFlashAttribute("result", "modified");
+        redirectAttributes.addAttribute("bno", boardDTO.getBno());
+
+        return "redirect:/board/read";
+
+    }
 
 }
