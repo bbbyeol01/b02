@@ -37,6 +37,16 @@
     </div>
 
 
+
+
+    <!-- 글쓰기 버튼 -->
+    <div class="form-row mt-3 col-1 float-none">
+        <a th:href="@{/board/register}">
+            <button class="btn btn-primary">글쓰기</button>
+        </a>
+    </div>
+
+
     <div class="row mt-3">
         <div class="col">
             <div class="card">
@@ -58,7 +68,7 @@
                         <tr th:each="dto:${pageResponseDTO.dtoList}">
                             <th scope="row">[[${dto.bno}]]</th>
                             <td>
-                                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|">
+                                <a th:href="|@{/board/read(bno=${dto.bno})}|">
                                 [[${dto.title}]]
                                 </a>
                             </td>
@@ -87,6 +97,8 @@
                             </li>
                         </ul>
                     </div>
+
+
                 </div>
             </div>
         </div>
@@ -128,7 +140,7 @@
 
         const num = target.getAttribute("data-num");
         const formObj = document.querySelector("form");
-        formObj.innerHTML += `<input type='hidden' name='page' value=${num}'>`;
+        formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`;
         formObj.submit();
     }, false)
 

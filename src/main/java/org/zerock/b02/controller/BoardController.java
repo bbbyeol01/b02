@@ -100,4 +100,17 @@ public class BoardController {
 
     }
 
+    @GetMapping("/delete")
+    public String delete(Long bno, RedirectAttributes redirectAttributes){
+
+        log.info("remove post number........." + bno);
+
+        boardService.remove(bno);
+
+        redirectAttributes.addFlashAttribute("result", "removed");
+
+        return "redirect:/board/list";
+
+    }
+
 }
