@@ -82,6 +82,15 @@
 <script layout:fragment="script" th:inline="javascript">
 
     const bno = [[${boardDTO.bno}]];
+    const replyList = document.querySelector(".replyList");
+    const replyPaging = document.querySelector(".replyPaging");
+
+
+    function printList(dtoList) {
+
+        let str = '';
+
+    }
 
     function printReplies(page, size, goLast){
         getList({bno, page, size, goLast}).then(data => {
@@ -92,6 +101,7 @@
     }
 
     printReplies(1, 10);
+
 
 
 </script>
