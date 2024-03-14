@@ -1,5 +1,7 @@
 package org.zerock.b02.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +28,11 @@ public class ReplyDTO {
     @NotEmpty
     private String replyer;
 
-    private LocalDateTime regData, modDate;
+//    출력 포맷
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime regDate;
+
+//    수정 시간은 화면에 출력할 일이 없으므로 JsonIgnore
+    @JsonIgnore
+    private LocalDateTime modDate;
 }

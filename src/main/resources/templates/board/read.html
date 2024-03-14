@@ -50,8 +50,7 @@
     <br>
     <hr>
 
-
-    <!-- 댓글 모달 -->
+    <!-- 댓글 페이지 -->
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="my-4">
@@ -60,6 +59,37 @@
             <ul class="list-group replyList"></ul>
         </div>
     </div>
+
+
+
+    <!-- 댓글 모달 -->
+  <div class="modal registerModal" tabindex="-1">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title">댓글 등록</h5>
+                  <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+                  <div class="input-group mb-3">
+                      <span class="input-group-text">댓글 내용</span>
+                      <textarea type="text" class="form-control replyText"></textarea>
+                  </div>
+                  <div class="input-group mb-3">
+                      <span class="input-group-text">작성자</span>
+                      <input type="text" class="form-control replyer"/>
+                  </div>
+              </div>
+
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-primary registerBtn">등록</button>
+                  <button type="button" class="btn btn-outline-dark closeRegisterBtn">닫기</button>
+              </div>
+          </div>
+
+      </div>
+  </div>
 
 
     <!-- 댓글 페이지 -->
@@ -86,22 +116,102 @@
     const replyPaging = document.querySelector(".replyPaging");
 
 
+    // 댓글 출력
     function printList(dtoList) {
 
         let str = '';
 
-    }
+        if(dtoList && dtoList.length > 0){
+            for(const dto of dtoList){
+
+                str += `<li class="list-group-item d-flex replyItem">
+                <span class="col-2">${dto.rno}</span>
+                <span class="col-6" data-rno="${dto.rno}"> ${dto.replyText}</span>
+                <span class="col-2">${dto.replyer}</span>
+                <span class="col-2">${dto.regDate}</span>
+                </li>`;
+            }// for
+        }// if
+
+        replyList.innerHTML = str;
+    }// printList
+
+
+    // 댓글 페이지 출력
+    function printPages(data){
+
+    //     페이징
+        let pageStr = '';
+
+        // 이전 페이지가 있으면
+        if(data.prev){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.start -1}">Prev</a></li>`;
+        }
+
+        // 1 2 3 4 페이지 출력
+        for(let i = data.start; i <= data.end; i++){
+            pageStr += `<li class="page-item ${i === data.page ? "active" : ""}"><a class="page-link" data-page="${i}">${i}</a></li>`;
+        }
+
+        // 다음 페이지가 있으면
+        if(data.next){
+            pageStr += `<li class="page-item"><a class="page-link" data-page="${data.end + 1}">Next</a></li>`;
+        }
+
+        replyPaging.innerHTML = pageStr;
+    }// printPages
 
     function printReplies(page, size, goLast){
         getList({bno, page, size, goLast}).then(data => {
             console.log(data);
+            printList(data.dtoList);
+            printPages(data);
         }).catch(e => {
             console.error(e);
         })
-    }
+    }// printReplies
 
     printReplies(1, 10);
 
+
+    // 댓글 모달 띄우기
+    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"));
+    const addReplyBtn = document.querySelector(".addReplyBtn");
+    const registerBtn = document.querySelector(".registerBtn");
+    const replyText = document.querySelector(".replyText");
+    const replyer = document.querySelector(".replyer");
+    const closeRegisterBtn = document.querySelector(".closeRegisterBtn");
+
+    addReplyBtn.addEventListener("click", function (e) {
+        registerModal.show();
+    }, false);
+
+    closeRegisterBtn.addEventListener("click", function (e) {
+        registerModal.hide();
+    })
+
+
+    registerBtn.addEventListener("click", function (e) {
+        const replyObj = {
+            bno : bno,
+            replyText : replyText.value,
+            replyer : replyer.value
+        }
+
+        console.log("replyText.value " + replyText.value);
+
+        console.log("registerBtn.addEventListener " + replyObj);
+
+        addReply(replyObj).then(result => {
+            alert(result.rno);
+            registerModal.hide();
+            replyText.value = '';
+            replyer.value = '';
+            printReplies(1, 10, true);
+        }).catch(e => {
+            alert("Exception!");
+        })
+    }, false)
 
 
 </script>
