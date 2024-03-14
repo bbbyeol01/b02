@@ -2,6 +2,7 @@ package org.zerock.b02.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.b02.dto.ReplyDTO;
+import org.zerock.b02.service.ReplyService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/replies")
 @Slf4j
+//  의존성 주입을 위한 생성자
+@RequiredArgsConstructor
 public class replyController {
+
+    private final ReplyService replyService;
 
     @Operation(summary = "reply POST", description = "POST 방식으로 댓글 등록")
     @PostMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -33,7 +39,10 @@ public class replyController {
         }
 
         Map<String, Long> resultMap = new HashMap<>();
-        resultMap.put("rno", 111L);
+
+        Long rno = replyService.register(replyDTO);
+
+        resultMap.put("rno", rno);
 
         return resultMap;
     }
