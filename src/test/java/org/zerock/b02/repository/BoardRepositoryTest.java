@@ -25,7 +25,8 @@ public class BoardRepositoryTest {
 //    insert 기능 테스트
     @Test
     public void insertTest(){
-        IntStream.rangeClosed(1, 100).forEach(i -> {
+//        글 400개 만듦
+        IntStream.rangeClosed(1, 400).forEach(i -> {
             Board board = Board.builder()
                     .title("title..." + i)
                     .content("content... " + i)

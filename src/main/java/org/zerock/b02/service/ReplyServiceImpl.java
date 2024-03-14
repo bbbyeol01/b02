@@ -61,7 +61,11 @@ public class ReplyServiceImpl implements ReplyService{
     @Override
     public void remove(Long rno) {
 
-        replyRepository.deleteById(rno);
+//        replyRepository.deleteById(rno);
+
+        Optional<Reply> result = replyRepository.findById(rno);
+        Reply reply = result.orElseThrow();
+        replyRepository.delete(reply);
 
     }
 

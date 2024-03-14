@@ -69,9 +69,10 @@ public class ReplyController {
     @DeleteMapping("/{rno}")
     public Map<String, Long> remove(@PathVariable("rno") Long rno){
 
-//        없는 번호로 삭제 시에도 Exception이 발생하지 않아 read 처리를 하였음 : 400
-        replyService.read(rno);
+//        없는 번호로 삭제 시에도 Exception 이 발생하지 않아 read 처리를 하였음 : 400
+//        replyService.read(rno);
 
+//        Service 단의 로직을 deleteById(rno) 에서 findById(rno) -> delete(rno)로 수정
         replyService.remove(rno);
 
         Map<String, Long> resultMap = new HashMap<>();
