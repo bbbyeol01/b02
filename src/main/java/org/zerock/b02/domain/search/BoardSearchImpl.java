@@ -1,6 +1,7 @@
 package org.zerock.b02.domain.search;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.zerock.b02.domain.Board;
 import org.zerock.b02.domain.QBoard;
+import org.zerock.b02.domain.QReply;
+import org.zerock.b02.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 
@@ -88,6 +91,80 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
 //        PageImpl(실제 목록 데이터, 페이지 관련 정보를 가진 객체, 전체 개수)
 //        PageImpl(list, pageable, count)
         return new PageImpl<>(list, pageable, count);
+    }
+
+    @Override
+    public Page<BoardListReplyCountDTO> searchWithReplyCount(String[] types, String keyword, Pageable pageable) {
+
+        QBoard board = QBoard.board;
+        QReply reply = QReply.reply;
+
+//        JPQLQuery<Board> query;
+//        query.from(board).leftJoin(reply).on(reply.board.eq(board)).groupBy(board);
+
+//        select ... from board
+        JPQLQuery<Board> query = from(board);
+
+//        left join reply on b.board = r.board
+        query.leftJoin(reply).on(reply.board.eq(board));
+
+//        group by board: 게시물당 처리
+        query.groupBy(board);
+
+
+//        검색 조건 적용
+//        types가 null이 아니고, 길이(tcw)가 0보다 크고, keyword가 null이 아니면
+//        검색 조건이 존재하면
+        if((types != null && types.length > 0) && keyword != null){
+
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            for(String type : types){
+                switch (type){
+                    case "t" :
+                        booleanBuilder.or(board.title.contains(keyword));
+                        break;
+                    case "c" :
+                        booleanBuilder.or(board.content.contains(keyword));
+                        break;
+                    case "w" :
+                        booleanBuilder.or(board.writer.contains(keyword));
+                }
+            }// for
+
+            query.where(booleanBuilder);
+
+        }// if
+
+//        bno > 0
+        query.where(board.bno.gt(0L));
+
+//        JPA는 Projection이라는 기능을 제공한다.
+//        JPQL의 결과를 바로 DTO로 처리하는 기능이다.
+//        queryDSL에서도 제공하는 기능이다.
+        JPQLQuery<BoardListReplyCountDTO> dtoQuery = query.select(
+//                쿼리 결과를 BoardListReplyCountDTO로 매핑
+                Projections.bean(BoardListReplyCountDTO.class,
+//                        b.bno, b.title, b.writer, b.regDate
+                        board.bno,
+                        board.title,
+                        board.writer,
+                        board.regDate,
+//                        count(reply) as replyCount
+                        reply.count().as("replyCount")
+                        ));
+
+        this.getQuerydsl().applyPagination(pageable, dtoQuery);
+
+//        쿼리 실행
+        List<BoardListReplyCountDTO> dtoList = dtoQuery.fetch();
+
+        long count = dtoQuery.fetchCount();
+
+//        List<BoardListReplyCountDTO>를 페이지 정보 추가해서 Page<BoardListReplyCountDTO>로 반환해야함
+        return new PageImpl<>(dtoList, pageable, count);
+
+
     }
 
 

@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.zerock.b02.domain.Board;
+import org.zerock.b02.dto.BoardListReplyCountDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void selectTest(){
-        Long bno = 100L;
+        Long bno = 300L;
 
         Optional<Board> result = boardRepository.findById(bno);
 
@@ -54,7 +55,7 @@ public class BoardRepositoryTest {
 
     @Test
     public void updateTest(){
-        Long bno = 100L;
+        Long bno = 300L;
 
 //        findById로 수정할 board를 불러와서
         Optional<Board> result = boardRepository.findById(bno);
@@ -108,7 +109,7 @@ public class BoardRepositoryTest {
     @Test
     public void searchAllTest(){
 
-        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
+        Pageable pageable = PageRequest.of(2, 10, Sort.by("bno").descending());
 
         String[] types = {"t", "c", "w"};
 
@@ -133,6 +134,20 @@ public class BoardRepositoryTest {
         boardList.getContent().forEach( board -> {
             log.info("board: " + board);
         });
+    }
+
+    @Test
+    public void searchReplyCountTest(){
+        String[] types = {"t", "c", "w"};
+
+        String keyword = "1";
+
+        Pageable pageable = PageRequest.of(1, 10, Sort.by("bno").descending());
+
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        result.getContent().forEach(board -> log.info("boardDTO" + board));
     }
 
 
