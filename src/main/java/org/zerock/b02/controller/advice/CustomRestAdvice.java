@@ -2,6 +2,7 @@ package org.zerock.b02.controller.advice;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.zip.DataFormatException;
 
 @RestControllerAdvice
@@ -50,6 +52,25 @@ public class CustomRestAdvice {
         return ResponseEntity.badRequest().body(errorMap);
 
 
-        }
+    }
+
+
+//    잘못된 댓글 번호를 요청했을 때 500(서버 오류)가 아니라 400 NoSuchException 발생시킴
+//    잘못된 댓글 번호로 삭제를 요청했을 때 500(서버 오류)가 아니라 400 NoSuchException 발생시킴 -> EmptyResultDataAccessException
+    @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
+    @ResponseStatus(HttpStatus.EXPECTATION_FAILED)
+    public ResponseEntity<Map<String, String>> handleNoSuchElement(Exception e){
+
+        log.error("Error! " + e);
+
+        Map<String, String> errorMap = new HashMap<>();
+
+        errorMap.put("time", "" + System.currentTimeMillis());
+        errorMap.put("msg", "No Such Element Exception");
+
+        return ResponseEntity.badRequest().body(errorMap);
+
+
+    }
 
 }
