@@ -4,11 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.zerock.b02.dto.BoardDTO;
-import org.zerock.b02.dto.PageRequestDTO;
-import org.zerock.b02.dto.PageResponseDTO;
+import org.zerock.b02.dto.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @SpringBootTest
 @Slf4j
@@ -54,6 +54,11 @@ public class BoardServiceTests {
                 .content("modified Content...")
                 .build();
 
+//        첨부 파일 하나 추가
+//        첨부 파일이 존재하는 게시글 수정은 첨부파일을 모두 지운 뒤 다른 이름으로 새로 등록하는 것
+//        boardDTO.setFileNames(Arrays.asList(UUID.randomUUID() + "_zzz.jpg"));
+        boardDTO.setFileNames(List.of(UUID.randomUUID() + "_zzz.jpg"));
+
         boardService.modify(boardDTO);
     }
 
@@ -77,6 +82,75 @@ public class BoardServiceTests {
         log.info("current page: " + pageResponseDTO.getPage());
         log.info("start: " + pageResponseDTO.getStart());
         log.info("end: " + pageResponseDTO.getEnd());
+
+    }
+
+
+    @Test
+    public void registerWithImagesTest(){
+        log.info("boardService " + boardService.getClass().getName());
+
+        BoardDTO boardDTO = BoardDTO.builder()
+                .title("File Sample title......")
+                .content("File Sample Content......")
+                .writer("user00")
+                .build();
+
+        boardDTO.setFileNames(Arrays.asList(
+                UUID.randomUUID() + "_aaa.jpg",
+                UUID.randomUUID() + "_bbb.jpg",
+                UUID.randomUUID() + "_bbb.jpg"
+        ));
+
+        Long bno = boardService.register(boardDTO);
+    }
+
+
+    @Test
+    public void readAllTest(){
+        Long bno = 101L;
+
+        BoardDTO boardDTO = boardService.readOne(bno);
+
+        log.info("read..." + boardDTO);
+
+        for(String fileName : boardDTO.getFileNames()){
+            log.info("fileName " + fileName);
+        }
+    }
+
+    @Test
+    public void removeAllTest(){
+        Long bno = 1L;
+
+//        댓글이 없는 게시글의 삭제만 구현되어있음
+//        게시글을 삭제하기 전에 이미지부터 삭제
+        boardService.remove(bno);
+    }
+
+    @Test
+    public void listWithAllTest(){
+
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+        PageResponseDTO<BoardListAllDTO> pageResponseDTO = boardService.listWithAll(pageRequestDTO);
+
+        List<BoardListAllDTO> dtoList = pageResponseDTO.getDtoList();
+
+        dtoList.forEach(boardListAllDTO ->  {
+            log.info(boardListAllDTO.getBno() + ":" + boardListAllDTO.getTitle());
+
+            if(boardListAllDTO.getBoardImages() != null){
+                for(BoardImageDTO boardImageDTO : boardListAllDTO.getBoardImages()){
+                    log.info("boardImage " + boardImageDTO);
+                }// for
+            }// if
+
+            log.info("-----------------");
+        });// for Each
 
     }
 }

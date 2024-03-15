@@ -1,7 +1,5 @@
 package org.zerock.b02.dto;
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,22 +12,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardDTO {
+public class BoardListAllDTO {
 
     private Long bno;
-
-    @NotEmpty
-    @Size(min = 3, max = 100)
     private String title;
-
-    @NotEmpty
-    private String content;
-
-    @NotEmpty
     private String writer;
     private LocalDateTime regDate;
-    private LocalDateTime modDate;
+    private Long replyCount;
 
-//    첨부 파일 이름 목록
-    private List<String> fileNames;
+    private List<BoardImageDTO> boardImages;
+
 }

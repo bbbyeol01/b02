@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.zerock.b02.domain.Board;
-import org.zerock.b02.dto.BoardDTO;
-import org.zerock.b02.dto.BoardListReplyCountDTO;
-import org.zerock.b02.dto.PageRequestDTO;
-import org.zerock.b02.dto.PageResponseDTO;
+import org.zerock.b02.dto.*;
 import org.zerock.b02.repository.BoardRepository;
 
 import java.util.List;
@@ -29,26 +26,26 @@ public class BoardServiceImpl implements BoardService{
 
     @Override
     public Long register(BoardDTO boardDTO) {
-        Board board = modelMapper.map(boardDTO, Board.class);
 
-        Long bno = boardRepository.save(board).getBno();
+//        modelMapper 로 BoardDTO -> Board 매핑
+//        Board board = modelMapper.map(boardDTO, Board.class);
 
-        return bno;
+        Board board = dtoToEntity(boardDTO);
+
+        return boardRepository.save(board).getBno();
 
     }
 
     @Override
     public BoardDTO readOne(Long bno) {
 
-        Optional<Board> result = boardRepository.findById(bno);
+        Optional<Board> result = boardRepository.findByIdWithImages(bno);
 
 //        데이터베이스와 완전히 일치하는 엔티티 객체
         Board board = result.orElseThrow();
 
 //        엔티티 -> dto 변환
-        BoardDTO boardDTO = modelMapper.map(board, BoardDTO.class);
-
-        return boardDTO;
+        return entityToDTO(board);
     }
 
     @Override
@@ -58,6 +55,16 @@ public class BoardServiceImpl implements BoardService{
         Board board = result.orElseThrow();
 
         board.update(boardDTO.getTitle(), boardDTO.getContent());
+
+//        첨부 파일 처리
+        board.clearImage();
+
+        if(boardDTO.getFileNames() != null){
+            for(String fileName : boardDTO.getFileNames()){
+                String[] arr = fileName.split("_");
+                board.addImage(arr[0], arr[1]);
+            }// for
+        }// if
 
         boardRepository.save(board);
     }
@@ -103,6 +110,23 @@ public class BoardServiceImpl implements BoardService{
 
 //        withAll은 Build와 같지만 필드를 모두 사용하겠다는 뜻
         return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
+                .total((int)result.getTotalElements())
+                .build();
+
+    }
+
+    @Override
+    public PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO) {
+
+        String[] types = pageRequestDTO.getType();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable();
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListAllDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(result.getContent())
                 .total((int)result.getTotalElements())
