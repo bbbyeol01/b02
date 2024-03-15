@@ -14,6 +14,7 @@ public class UploadResultDTO {
     private String uuid;
     private String fileName;
     private boolean image;
+    private String link = getLink();
 
     private String getLink(){
         if(image){

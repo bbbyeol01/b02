@@ -3,6 +3,7 @@ package org.zerock.b02.service;
 import org.zerock.b02.domain.Board;
 import org.zerock.b02.dto.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,10 @@ public interface BoardService {
         if(boardDTO.getFileNames() != null){
 
             boardDTO.getFileNames().forEach(fileNames -> {
+//                "_"로 나누게 되면 "_"가 여러 개 포함된 이미지일 경우 확장자가 저장되지 못하는 현상 발생
+//                마지막 _를 찾아서 substring(uuid), 그 뒤부터 마지막까지 substring(오리지널 파일 이름) 이렇게 바꿔야함(24/03/16)
                 String[] arr = fileNames.split("_");
+                System.out.println(Arrays.toString(arr));
                 board.addImage(arr[0], arr[1]);
             });
 
