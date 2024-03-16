@@ -40,7 +40,12 @@ public interface BoardService {
             boardDTO.getFileNames().forEach(fileNames -> {
 //                "_"로 나누게 되면 "_"가 여러 개 포함된 이미지일 경우 확장자가 저장되지 못하는 현상 발생
 //                마지막 _를 찾아서 substring(uuid), 그 뒤부터 마지막까지 substring(오리지널 파일 이름) 이렇게 바꿔야함(24/03/16)
-                String[] arr = fileNames.split("_");
+//                String[] arr = fileNames.split("_");
+
+//                맨 처음에 오는 "_"의 인덱스를 찾아내 그 인덱스를 기준으로 String 을 잘라낸다.
+                int start = fileNames.indexOf("_");
+                String[] arr = {fileNames.substring(0, start), fileNames.substring(start)};
+
                 System.out.println(Arrays.toString(arr));
                 board.addImage(arr[0], arr[1]);
             });

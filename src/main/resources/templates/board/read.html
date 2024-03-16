@@ -10,6 +10,14 @@
 
 <div layout:fragment="content">
 
+<!--    글 삭제 form-->
+    <form th:action="@{/board/delete}" method="delete" id="f1">
+
+        <input type="hidden" th:value="${boardDTO.bno}" name="bno"/>
+        <input type="hidden" name="title" th:value="${boardDTO.title}"/>
+        <input type="hidden" name="content" th:text="${boardDTO.content}"/>
+        <input type="hidden" name="writer" th:value="${boardDTO.writer}"/>
+
     <div class="row mt-3">
         <div class="col">
           <div class="card">
@@ -19,13 +27,29 @@
             <div class="card-body">
               <br>
               [[${boardDTO.content}]]
-              <br>
+
+
+
+                <!--    이미지 -->
+                <div class="col">
+                    <div class="uploadResult">
+                        <img class="card-img-top" th:each="fileName: ${boardDTO.fileNames}" th:src="|/view/${fileName}|">
+                    </div>
+                    <div class="float-end uploadHidden">
+                    </div>
+                </div>
+
+
+
+                <br>
               <br>
             </div>
             <div class="card-footer" th:text="${#temporals.format(boardDTO.modDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
           </div>
         </div>
     </div> <!-- 글 -->
+
+    </form>
 
 
   <div class="my-4">
@@ -42,6 +66,7 @@
 
     </div>
   </div> <!-- 버튼 -->
+
 
 
 
@@ -341,6 +366,49 @@
 
     }, false)
 
+
+
+    const formObj = document.querySelector("#f1");
+
+//     게시글 삭제
+    document.querySelector(".remBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log(formObj);
+
+        if(!confirm('정말로 삭제하시겠습니까?')){
+            return;
+        }
+
+    //     화면에 보이는 파일들을 form 태그에 추가
+        appendFileData();
+
+        formObj.action = `/board/delete`;
+        formObj.method = 'POST';
+        formObj.submit();
+        alert('삭제되었습니다.');
+    })
+
+
+
+    const uploadResult = document.querySelector(".uploadResult");
+
+    function appendFileData(){
+        const target = document.querySelector(".uploadHidden");
+        const uploadFiles = uploadResult.querySelectorAll('img');
+
+        let str = '';
+
+        for(let i = 0; i < uploadFiles.length; i++){
+            const uploadFile = uploadFiles[i];
+            const imgLink = uploadFile.getAttribute("src");
+
+            str += `<input type="hidden" name="fileNames" value="${imgLink}">`;
+        }
+
+        target.innerHTML = str;
+    }
 
 
 
