@@ -44,7 +44,7 @@ public interface BoardService {
 
 //                맨 처음에 오는 "_"의 인덱스를 찾아내 그 인덱스를 기준으로 String 을 잘라낸다.
                 int start = fileNames.indexOf("_");
-                String[] arr = {fileNames.substring(0, start), fileNames.substring(start)};
+                String[] arr = {fileNames.substring(0, start), fileNames.substring(start + 1)};
 
                 System.out.println(Arrays.toString(arr));
                 board.addImage(arr[0], arr[1]);

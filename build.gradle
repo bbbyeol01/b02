@@ -60,6 +60,11 @@ dependencies {
 //    thumbnail
     implementation 'net.coobird:thumbnailator:0.4.16'
 
+//    spring web security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    thymeleaf spring security
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+
 
 }
 

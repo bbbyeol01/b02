@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,6 +52,7 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("hasRole('USER')")    //  표현식 hasRole: 특정 권한이 있는 사용자 허용
     @GetMapping("/register")
     public void registerGet() {
 
@@ -79,6 +81,8 @@ public class BoardController {
 
     }
 
+
+    @PreAuthorize("isAuthenticated()")  //  로그인한 유저만 게시글을 읽을 수 있음
     @GetMapping({"/read", "/modify"})   //  read와 modify에 접속했을 때 해당 글을 model로 반환
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model){
 
@@ -89,6 +93,7 @@ public class BoardController {
         model.addAttribute("boardDTO", boardDTO);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,
