@@ -1,4 +1,4 @@
-package org.zerock.b02.service;
+package org.zerock.b02.security;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("isAuthenticated()")  //  로그인한 유저만 글 작성할 수 있음
     @GetMapping("/register")
     public void registerGet() {
 
@@ -77,6 +79,7 @@ public class BoardController {
         model.addAttribute("boardDTO", boardDTO);
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer") //  로그인한 유저와 댓글 작성 유저가 같아야 modify 진입 가능
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
                          @Valid BoardDTO boardDTO,
@@ -105,12 +108,13 @@ public class BoardController {
 
     }
 
+    @PreAuthorize("principal.username == #boardDTO.writer") //  로그인한 유저와 댓글 작성 유저가 같아야 modify 진입 가능
     @GetMapping("/delete")
-    public String delete(Long bno, RedirectAttributes redirectAttributes){
+    public String delete(BoardDTO boardDTO, RedirectAttributes redirectAttributes){
 
-        log.info("remove post number........." + bno);
+        log.info("remove post number........." + boardDTO.getBno());
 
-        boardService.remove(bno);
+        boardService.remove(boardDTO.getBno());
 
         redirectAttributes.addFlashAttribute("result", "removed");
 
