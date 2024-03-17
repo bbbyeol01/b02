@@ -237,7 +237,8 @@
             alert(result.rno);
             registerModal.hide();
             replyText.value = '';
-            replyer.value = '';
+            // 댓글 작성자가 고정되었기 때문에 해당 부분을 초기화할 필요 없음
+            // replyer.value = '';
             printReplies(1, 10, true);
         }).catch(e => {
             alert("Exception!");

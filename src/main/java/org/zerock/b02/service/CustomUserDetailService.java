@@ -26,9 +26,9 @@ public class CustomUserDetailService implements UserDetailsService {
         log.info("loadUserByUsername: " + username);
 
         return User.builder()
-                .username("user1")
+                .username("user2")
 //                .password("1111")
-                .password(passwordEncoder.encode("1111"))   //  패스워드 인코딩
+                .password(passwordEncoder.encode("2222"))   //  패스워드 인코딩
                 .authorities("ROLE_USER")
                 .build();
     }
