@@ -117,7 +117,6 @@ public class BoardController {
         boardService.remove(boardDTO.getBno());
 
         redirectAttributes.addFlashAttribute("result", "removed");
-        
 
         return "redirect:/board/list";
 
