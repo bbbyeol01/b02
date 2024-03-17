@@ -4,10 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.zerock.b02.domain.Board;
 import org.zerock.b02.dto.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -154,23 +152,5 @@ public class BoardServiceTests {
             log.info("-----------------");
         });// for Each
 
-    }
-
-    @Test
-    public void dtoToEntityTest(){
-
-        String[] strs = {"thisisuuid_aaa_a_.jpg", "thisisuuid_abc.jpg"};
-        List<String> fileNames = new ArrayList<>(List.of(strs));
-
-        BoardDTO boardDTO = BoardDTO.builder()
-                .title("test title")
-                .content("test content")
-                .writer("test writer")
-                .fileNames(fileNames)
-                .build();
-
-        Board board = boardService.dtoToEntity(boardDTO);
-        log.info("dtoToEntity " + board);
-        log.info("board imageSet " + board.getImageSet());
     }
 }

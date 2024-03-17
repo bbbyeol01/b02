@@ -71,7 +71,7 @@
                                 <a th:href="|@{/board/read(bno=${dto.bno})}|">
                                 [[${dto.title}]]
                                 </a>
-                                <span class="badge progress-bar-success" style="background-color: #000">[[${dto.replyCount}]]</span>
+                                <span class="badge progress-bar-success" style="background-color: #4f5050">[[${dto.replyCount}]]</span>
                             </td>
                             <td>[[${dto.writer}]]</td>
                             <!-- <td>[[${dto.regDate}]]</td> -->
@@ -106,24 +106,24 @@
     </div>
 
 
-<!--    &lt;!&ndash; 모달창 &ndash;&gt;-->
-<!--    <div class="modal" tabindex="-1">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title">글 작성</h5>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <p>작성이 완료되었습니다.</p>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>-->
-<!--                    &lt;!&ndash; <button type="button" class="btn btn-primary">Save changes</button> &ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!-- 모달창 -->
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">글 작성</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>작성이 완료되었습니다.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div> <!-- div content -->
