@@ -112,7 +112,7 @@
                         <textarea type="text" class="form-control modifyText"></textarea>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" th:with="user=${#authentication.principal}">
                     <button type="button" class="btn btn-info modifyBtn">수정</button>
                     <button type="button" class="btn btn-danger removeBtn">삭제</button>
                     <button type="button" class="btn btn-outline-dark closeModifyBtn">닫기</button>
@@ -140,6 +140,10 @@
 
 
 <script layout:fragment="script" th:inline="javascript">
+
+    //  현재 로그인한 유저
+    const currentUser = [[${#authentication.principal}]];
+
 
     const bno = [[${boardDTO.bno}]];
     const replyList = document.querySelector(".replyList");
@@ -278,6 +282,7 @@
         e.preventDefault();
         e.stopPropagation();
 
+
         const target = e.target;
 
         if(!target || target.tagName !== 'SPAN'){
@@ -292,14 +297,26 @@
 
         // 댓글의 내용을 모달에 띄워서 보여줌
         getReply(rno).then(reply => {
+
             console.log(reply);
+            console.log(currentUser);
+
+
+            // 댓글을 작성한 사람과 현재 로그인한 유저가 같지 않으면 return 모달 띄움
+            if(reply.replyer !== currentUser.username){
+                return;
+            }
+
             replyHeader.innerHTML = reply.rno;
             modifyText.value = reply.replyText;
+
+
 
             modifyModal.show();
 
 
-        }).catch( e => alert('error!'))
+        });
+        // }).catch( e => alert('error!'))
 
 
     })
