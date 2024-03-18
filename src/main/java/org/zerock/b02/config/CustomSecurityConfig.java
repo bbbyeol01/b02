@@ -13,10 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.zerock.b02.security.CustomUserDetailService;
 import org.zerock.b02.security.handler.Custom403Handler;
+import org.zerock.b02.security.handler.CustomSocialLoginSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -37,12 +39,18 @@ public class CustomSecurityConfig {
     }
 
     @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new CustomSocialLoginSuccessHandler(passwordEncoder());
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         log.info("-----------security configure------------");
 
-//        httpSecurity.formLogin().loginPage("/member/login");  //  Deprecated
-//        httpSecurity.csrf().disable();                        //  Deprecated
-//        httpSecurity.rememberMe();                            //  Deprecated
+//        httpSecurity.formLogin().loginPage("/member/login");      //  Deprecated
+//        httpSecurity.csrf().disable();                            //  Deprecated
+//        httpSecurity.rememberMe();                                //  Deprecated
+//        httpSecurity.oauth2Login().loginPage("/member/login").successHandler(authenticationSuccessHandler()));    //  Deprecated
         httpSecurity
                 .formLogin(formLogin -> formLogin
                         .loginPage("/member/login"))   //  커스텀 로그인 페이지
@@ -51,7 +59,8 @@ public class CustomSecurityConfig {
                         .key("12345678")
                         .tokenRepository(persistentTokenRepository())
                         .userDetailsService(userDetailService)
-                        .tokenValiditySeconds(60 * 60 * 24 * 30));  //  쿠키 유효 시간 30일
+                        .tokenValiditySeconds(60 * 60 * 24 * 30))//  쿠키 유효 시간 30일
+                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/member/login").successHandler(authenticationSuccessHandler()));
 
         return httpSecurity.build();
     }
@@ -79,6 +88,7 @@ public class CustomSecurityConfig {
 
         return (web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()));
     }
+
 
 
 

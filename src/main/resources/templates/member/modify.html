@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <meta name="description" content=""/>
+  <meta name="author" content=""/>
+
+  <title>Member modify</title>
+
+  <!-- favicon -->
+  <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}">
+
+  <!-- Core theme CSS (includes Bootstrap) -->
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body class="align-middle">
+
+<div class="container-fluid d-flex justify-content-center" style="height: 100vh">
+  <div class="card align-self-center">
+    <div class="card-header">Login Page</div>
+    <div class="card-body">
+
+      <th:block th:if="${param.logout != null}">
+        <h1> Logout </h1>
+      </th:block>
+
+
+      <form id="registerForm" action="/member/modify" method="post">
+
+        <div class="input-group mb-3">
+          <span class="input-group-text">비밀번호</span>
+          <input type="password" name="password" class="form-control" placeholder="비밀번호">
+        </div>
+
+        <div class="my-4">
+          <div class="flex-wrap">
+            <button type="submit" class="btn btn-primary submitBtn" style="width: 100%">변경</button>
+          </div>
+        </div>
+
+      </form>
+
+    </div><!-- card body -->
+
+
+
+
+  </div><!-- card -->
+</div>
+
+</body>
+</html>

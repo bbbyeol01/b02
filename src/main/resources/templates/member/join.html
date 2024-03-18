@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+      layout:decorate="~{layout/basic.html}">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Join</title>
+</head>
+<body>
+
+<div layout:fragment="content">
+  <div class="row mt-3">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">회원가입</div>
+        <div class="card-body">
+          <form id="registerForm" action="/member/join" method="post">
+            <div class="input-group mb-3">
+              <span class="input-group-text">아이디</span>
+              <input type="text" name="mid" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">비밀번호</span>
+              <input type="password" name="mpw" class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <span class="input-group-text">이메일</span>
+              <input type="email" name="email" class="form-control">
+            </div>
+
+            <div class="my-4">
+              <div class="float-end">
+                <button type="submit" class="btn btn-primary submitBtn">가입</button>
+                <button type="reset" class="btn btn-secondary">초기화</button>
+              </div>
+            </div>
+
+          </form>
+        </div><!-- card body-->
+      </div> <!-- card-->
+    </div><!-- col -->
+  </div><!-- row-->
+</div><!-- content -->
+
+
+<script layout:fragment="script" th:inline="javascript">
+
+  // memberController에서 가입 과정 도중에 mid가 존재하는 경우(MidExistException) error를 redirectAttribute 넘겨줌
+
+  const error = [[${error}]];
+
+  // error 가 null이 아니고, error가 mid라면
+  if(error && error === 'mid'){
+    alert("이미 존재하는 아이디입니다.");
+  }
+
+
+</script>
+
+</body>
+</html>
